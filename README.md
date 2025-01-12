@@ -45,8 +45,8 @@
 
 - cliente\_endereco: id\_cliente (PK,FK), id\_endereco (PK,FK);
 
-- produto: id\_produto (PK), descricao\_produto, preco, quantidade,
-  status\_produto, data\_inclusao, data\_alteracao;
+- produto: id\_produto (PK), descricao, preco, quantidade, status\_produto,
+  data\_inclusao, data\_alteracao;
 
 - pedido: id\_pedido (PK), id\_cliente (FK), somatorio, status\_pedido,
   data\_inclusao, data\_alteracao;
@@ -86,7 +86,7 @@ erDiagram
     }
     produto {
         INTEGER  id_produto PK
-        VARCHAR  descricao_produto
+        VARCHAR  descricao
         DECIMAL  preco
         INTEGER  quantidade
         BOOLEAN  status_produto 
@@ -140,15 +140,15 @@ erDiagram
 | id\_endereco | INTEGER | 4 bytes | PK, FK, NOT null | Código de identificação do endereco que contem. |
 
 # Entidade produto
-| Coluna             | Tipo     | Tamanho  | Complemento                | Descricao                             |
-|--------------------|----------|----------|----------------------------|---------------------------------------|
-| id\_produto        | INTEGER  |  4 bytes | PK, auto\_increment        | Código de identificação do produto.   |
-| descricao\_produto | CHAR     | 50 bytes | NOT null                   | Descrição do produto em questão.      |
-| preco              | DECIMAL  |  5 bytes | NOT null                   | Preço do produto, ex. R$12.345,67     |
-| quantidade         | INTEGER  |  4 bytes | DEFAULT 1                  | Quantidade de produtos em estoque.    |
-| status\_produto    | BOOLEAN  |  1 bytes | DEFAULT true               | Status de disponibilidade de produto. |
-| data\_inclusao     | DATETIME |  3 bytes | DEFAULT current\_timestamp | Data em que o produto foi incluído.   |
-| data\_alteracao    | DATETIME |  3 bytes | null                       | Data em que o produto foi alterado.   |
+| Coluna          | Tipo     | Tamanho  | Complemento                | Descricao                             |
+|-----------------|----------|----------|----------------------------|---------------------------------------|
+| id\_produto     | INTEGER  |  4 bytes | PK, auto\_increment        | Código de identificação do produto.   |
+| descricao       | CHAR     | 50 bytes | NOT null                   | Descrição do produto em questão.      |
+| preco           | DECIMAL  |  5 bytes | NOT null                   | Preço do produto, ex. R$12.345,67     |
+| quantidade      | INTEGER  |  4 bytes | DEFAULT 1                  | Quantidade de produtos em estoque.    |
+| status\_produto | BOOLEAN  |  1 bytes | DEFAULT true               | Status de disponibilidade de produto. |
+| data\_inclusao  | DATETIME |  3 bytes | DEFAULT current\_timestamp | Data em que o produto foi incluído.   |
+| data\_alteracao | DATETIME |  3 bytes | null                       | Data em que o produto foi alterado.   |
 
 # Entidade pedido
 | Coluna       | Tipo    | Tamanho | Complemento                    | Descricao                           |
