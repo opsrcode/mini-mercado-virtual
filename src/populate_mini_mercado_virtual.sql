@@ -64,7 +64,7 @@ SELECT ppq.id_pedido
              , 1 AS id_produto
 	     , 2 AS quantidade 
 	 UNION ALL
-        SELECT 1
+        SELECT 2
 	     , 2
 	     , 1) AS ppq
  INNER JOIN produto AS p
