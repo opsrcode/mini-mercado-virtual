@@ -14,7 +14,7 @@ SELECT c.nome                AS "Nome cliente"
 | Romario Roberto de Lima  | orlando@hotmail.com | 2025-01-13    |      1 |
 | Ronaldo Nazario da Silva | ronaldo@hotmail.com | 2025-01-13    |      1 |
 +--------------------------+---------------------+---------------+--------+
-2 rows in set (0.000 sec)
+2 rows in set (0.00 sec)
 
 --------------
 SELECT c.nome       AS "Nome cliente"
@@ -24,7 +24,7 @@ SELECT c.nome       AS "Nome cliente"
      , e.cidade     AS "Cidade"
      , e.bairro     AS "Bairro"
      , e.logradouro AS "Logradouro"
-     , e.numero     AS "Numero"
+     , e.numero     AS "Nº"
   FROM cliente AS c
  INNER JOIN cliente_endereco AS ce
     ON ce.id_cliente = c.id_cliente
@@ -32,13 +32,13 @@ SELECT c.nome       AS "Nome cliente"
     ON e.id_endereco = ce.id_endereco
 --------------
 
-+--------------------------+---------------------+--------------+----+-----------+-------------+------------------+--------+
-| Nome cliente             | E-mail              | Senha        | UF | Cidade    | Bairro      | Logradouro       | Numero |
-+--------------------------+---------------------+--------------+----+-----------+-------------+------------------+--------+
-| Romario Roberto de Lima  | orlando@hotmail.com | Password213* | SP | Sao Paulo | Barra Funda | Vitorino Carmilo |    156 |
-| Ronaldo Nazario da Silva | ronaldo@hotmail.com | GolPass09*   | SP | Sao Paulo | Barra Funda | Vitorino Carmilo |    156 |
-+--------------------------+---------------------+--------------+----+-----------+-------------+------------------+--------+
-2 rows in set (0.000 sec)
++--------------------------+---------------------+--------------+----+-----------+-------------+------------------+-----+
+| Nome cliente             | E-mail              | Senha        | UF | Cidade    | Bairro      | Logradouro       | Nº |
++--------------------------+---------------------+--------------+----+-----------+-------------+------------------+-----+
+| Romario Roberto de Lima  | orlando@hotmail.com | Password213* | SP | Sao Paulo | Barra Funda | Vitorino Carmilo | 156 |
+| Ronaldo Nazario da Silva | ronaldo@hotmail.com | GolPass09*   | SP | Sao Paulo | Barra Funda | Vitorino Carmilo | 156 |
++--------------------------+---------------------+--------------+----+-----------+-------------+------------------+-----+
+2 rows in set (0.00 sec)
 
 --------------
 SELECT p.descricao AS "Descricao produto"
@@ -53,7 +53,7 @@ SELECT p.descricao AS "Descricao produto"
 | Mouse sem fio Logitech Trackball ERGO M575S | 325.90 |
 | Faca Diutac - Nautika                       |  96.90 |
 +---------------------------------------------+--------+
-2 rows in set (0.000 sec)
+2 rows in set (0.00 sec)
 
 --------------
 SELECT p.id_pedido     AS "ID pedido"
@@ -70,14 +70,48 @@ SELECT p.id_pedido     AS "ID pedido"
 +-----------+--------------------------+---------------------+--------------+---------------------+
 | ID pedido | Nome cliente             | E-mail              | Em andamento | Data solicitacao    |
 +-----------+--------------------------+---------------------+--------------+---------------------+
-|         1 | Romario Roberto de Lima  | orlando@hotmail.com |            1 | 2025-01-13 01:21:44 |
-|         2 | Ronaldo Nazario da Silva | ronaldo@hotmail.com |            1 | 2025-01-13 01:21:44 |
+|         1 | Romario Roberto de Lima  | orlando@hotmail.com |            1 | 2025-01-13 11:29:39 |
+|         2 | Ronaldo Nazario da Silva | ronaldo@hotmail.com |            1 | 2025-01-13 11:29:39 |
 +-----------+--------------------------+---------------------+--------------+---------------------+
-2 rows in set (0.000 sec)
+2 rows in set (0.00 sec)
+
+--------------
+SELECT pe.id_pedido                AS "ID pedido"
+     , c.nome                      AS "Nome cliente"
+     , c.email                     AS "E-mail"
+     , e.uf                        AS "UF"
+     , e.cidade                    AS "Cidade"
+     , e.bairro                    AS "Bairro"
+     , e.logradouro                AS "Logradouro"
+     , e.numero                    AS "Nº"
+     , pr.descricao                AS "Descrição produto"
+     , CONCAT("R$ ", pr.valor)     AS "Valor unidade"
+     , pp.quantidade               AS "Unidades"
+     , CONCAT("R$ ", pp.somatorio) AS "Valor total"
+     , DATE(pe.data_inclusao)      AS "Inclusao"
+     , pe.status_pedido            AS "Em andamento"
+ FROM pedido_produto AS pp
+INNER JOIN pedido AS pe
+   ON pe.id_pedido = pp.id_pedido
+INNER JOIN cliente AS c
+   ON c.id_cliente = pe.id_cliente
+INNER JOIN endereco AS e
+   ON e.id_endereco = pe.id_endereco
+INNER JOIN produto AS pr 
+   ON pr.id_produto = pp.id_produto
+--------------
+
++-----------+--------------------------+---------------------+----+-----------+-------------+------------------+-----+------------------------------------------------+---------------+----------+-------------+------------+--------------+
+| ID pedido | Nome cliente             | E-mail              | UF | Cidade    | Bairro      | Logradouro       | Nº  | Descrição produto                              | Valor unidade | Unidades | Valor total | Inclusao   | Em andamento |
++-----------+--------------------------+---------------------+----+-----------+-------------+------------------+-----+------------------------------------------------+---------------+----------+-------------+------------+--------------+
+|         1 | Romario Roberto de Lima  | orlando@hotmail.com | SP | Sao Paulo | Barra Funda | Vitorino Carmilo | 156 | Mouse sem fio Logitech Trackball ERGO M575S    | R$ 325.90     |        2 | R$ 651.80   | 2025-01-13 |            1 |
+|         2 | Ronaldo Nazario da Silva | ronaldo@hotmail.com | SP | Sao Paulo | Barra Funda | Vitorino Carmilo | 156 | Art of Computer Programming, The, Volumes 1-4B | R$ 1984.68    |        1 | R$ 1984.68  | 2025-01-13 |            1 |
++-----------+--------------------------+---------------------+----+-----------+-------------+------------------+-----+------------------------------------------------+---------------+----------+-------------+------------+--------------+
+2 rows in set (0.00 sec)
 
 --------------
 SELECT DATE(p.data_inclusao)            AS "Data inclusao"
-      , SUM(pp.quantidade)               AS "Unidades"
+      , SUM(pp.quantidade)               AS "Produtos"
       , CONCAT("R$ ", SUM(pp.somatorio)) AS "Valor total"
    FROM pedido_produto AS pp
   INNER JOIN pedido AS p
@@ -85,14 +119,16 @@ SELECT DATE(p.data_inclusao)            AS "Data inclusao"
   WHERE DATE(p.data_inclusao)
 BETWEEN "2025/01/10"
     AND current_date
+  GROUP BY p.id_pedido
 --------------
 
 +---------------+----------+-------------+
-| Data inclusao | Unidades | Valor total |
+| Data inclusao | Produtos | Valor total |
 +---------------+----------+-------------+
-| 2025-01-13    |        3 | R$ 2636.48  |
+| 2025-01-13    |        2 | R$ 651.80   |
+| 2025-01-13    |        1 | R$ 1984.68  |
 +---------------+----------+-------------+
-1 row in set (0.000 sec)
+2 rows in set, 2 warnings (0.00 sec)
 
 --------------
 SELECT DATE(pe.data_inclusao)           AS "Data inclusao"
@@ -108,7 +144,7 @@ SELECT DATE(pe.data_inclusao)           AS "Data inclusao"
   WHERE DATE(pe.data_inclusao)
 BETWEEN "2025/01/10"
     AND current_date
-  GROUP BY pp.id_produto
+  GROUP BY pr.id_produto, pe.id_pedido
 --------------
 
 +---------------+------------------------------------------------+---------------+----------+-------------+
@@ -117,6 +153,6 @@ BETWEEN "2025/01/10"
 | 2025-01-13    | Mouse sem fio Logitech Trackball ERGO M575S    | R$ 325.90     |        2 | R$ 651.80   |
 | 2025-01-13    | Art of Computer Programming, The, Volumes 1-4B | R$ 1984.68    |        1 | R$ 1984.68  |
 +---------------+------------------------------------------------+---------------+----------+-------------+
-2 rows in set (0.000 sec)
+2 rows in set, 2 warnings (0.00 sec)
 
 Bye
