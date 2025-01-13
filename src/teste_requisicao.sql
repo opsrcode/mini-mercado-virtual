@@ -22,7 +22,7 @@ SELECT c.nome       AS "Nome cliente"
      , e.cidade     AS "Cidade"
      , e.bairro     AS "Bairro"
      , e.logradouro AS "Logradouro"
-     , e.numero     AS "Numero"
+     , e.numero     AS "Nº"
   FROM cliente AS c
  INNER JOIN cliente_endereco AS ce
     ON ce.id_cliente = c.id_cliente
@@ -54,22 +54,22 @@ SELECT p.id_pedido     AS "ID pedido"
 
 /*
   Solicita informações completas do pedido incluindo informações cruzadas das
-  tabelas que possuem relação.
+  tabelas que possuem relação. Tem como referência os produtos por pedido.
 */
-SELECT pe.id_pedido           AS "ID pedido"
-     , c.nome                 AS "Nome cliente"
-     , c.email                AS "E-mail"
-     , e.uf                   AS "UF"
-     , e.cidade               AS "Cidade"
-     , e.bairro               AS "Bairro"
-     , e.logradouro           AS "Logradouro"
-     , e.numero               AS "Número"
-     , pr.descricao           AS "Descrição do produto"
-     , pr.valor               AS "Valor unidade"
-     , pp.quantidade          AS "Quantidade"
-     , pp.somatorio           AS "Valor total"
-     , DATE(pe.data_inclusao) AS "Data solicitação"
-     , pe.status_pedido       AS "Em andamento"
+SELECT pe.id_pedido                AS "ID pedido"
+     , c.nome                      AS "Nome cliente"
+     , c.email                     AS "E-mail"
+     , e.uf                        AS "UF"
+     , e.cidade                    AS "Cidade"
+     , e.bairro                    AS "Bairro"
+     , e.logradouro                AS "Logradouro"
+     , e.numero                    AS "Nº"
+     , pr.descricao                AS "Descrição produto"
+     , CONCAT("R$ ", pr.valor)     AS "Valor unidade"
+     , pp.quantidade               AS "Unidades"
+     , CONCAT("R$ ", pp.somatorio) AS "Valor total"
+     , DATE(pe.data_inclusao)      AS "Inclusao"
+     , pe.status_pedido            AS "Em andamento"
  FROM pedido_produto AS pp
 INNER JOIN pedido AS pe
    ON pe.id_pedido = pp.id_pedido
@@ -85,14 +85,15 @@ INNER JOIN produto AS pr
   especificado na instrucao 'WHERE'. Basicamente, o extrato do dia.
 */
  SELECT DATE(p.data_inclusao)            AS "Data inclusao"
-      , SUM(pp.quantidade)               AS "Unidades"
+      , SUM(pp.quantidade)               AS "Produtos"
       , CONCAT("R$ ", SUM(pp.somatorio)) AS "Valor total"
    FROM pedido_produto AS pp
   INNER JOIN pedido AS p
      ON p.id_pedido = pp.id_pedido
   WHERE DATE(p.data_inclusao)
 BETWEEN "2025/01/10"
-    AND current_date;
+    AND current_date
+  GROUP BY p.id_pedido;
 
 /*
   Novamente, lista o extrado do dia determinado pela instrucao 'WHERE', mas
@@ -112,4 +113,4 @@ BETWEEN "2025/01/10"
   WHERE DATE(pe.data_inclusao)
 BETWEEN "2025/01/10"
     AND current_date
-  GROUP BY pp.id_produto;
+  GROUP BY pr.id_produto, pe.id_pedido;
