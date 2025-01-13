@@ -52,18 +52,33 @@ SELECT p.id_pedido     AS "ID pedido"
     ON c.id_cliente = p.id_cliente
  WHERE p.status_pedido = true;
 
-/* TODO
-  Pedido_Produto, tive problemas em relacionar as tabelas cliente_endereco
-  para obter informacoes do endereco, visto que nao possui ligacao de chave
-  estrangeira com nenhuma outra tabela.
-SELECT PE.id_pedido, C.nome, C.email, E.uf, E.cidade, E.bairro, E.logradouro,
-       E.numero, PR.descricao, PR.valor, quantidade, somatorio,
-       DATE(PE.data_inclusao), PE.status_pedido
-FROM Pedido_Produto AS PP
-INNER JOIN (Pedido AS PE, Cliente AS C, Endereco AS E, Produto AS PR)
-ON PE.id_pedido=PP.id_pedido AND C.id_cliente=PE.id_cliente
-AND PR.id_produto=PP.id_produto AND E.id_endereco=C.id_endereco;
+/*
+  Solicita informações completas do pedido incluindo informações cruzadas das
+  tabelas que possuem relação.
 */
+SELECT pe.id_pedido           AS "ID pedido"
+     , c.nome                 AS "Nome cliente"
+     , c.email                AS "E-mail"
+     , e.uf                   AS "UF"
+     , e.cidade               AS "Cidade"
+     , e.bairro               AS "Bairro"
+     , e.logradouro           AS "Logradouro"
+     , e.numero               AS "Número"
+     , pr.descricao           AS "Descrição do produto"
+     , pr.valor               AS "Valor unidade"
+     , pp.quantidade          AS "Quantidade"
+     , pp.somatorio           AS "Valor total"
+     , DATE(pe.data_inclusao) AS "Data solicitação"
+     , pe.status_pedido       AS "Em andamento"
+ FROM pedido_produto AS pp
+INNER JOIN pedido AS pe
+   ON pe.id_pedido = pp.id_pedido
+INNER JOIN cliente AS c
+   ON c.id_cliente = pe.id_cliente
+INNER JOIN endereco AS e
+   ON e.id_endereco = pe.id_endereco
+INNER JOIN produto AS pr 
+   ON pr.id_produto = pp.id_produto;
 
 /*
   Solicita os dados de inclusao, quantidades e valor total de acordo com o dia
