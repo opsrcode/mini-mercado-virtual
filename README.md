@@ -121,14 +121,14 @@ erDiagram
 | bairro       | VARCHAR |  50 bytes | NOT null                       | Nome de identificação do bairro.          |
 | logradouro   | VARCHAR |  50 bytes | NOT null                       | Logradouro, nome de identificação rua.    |
 | numero       | VARCHAR |   8 bytes | NOT null, UNIQUE (cep, numero) | Número de identificação da propriedade.   |
-| complemento  | VARCHAR | 255 bytes | NOT null                       | Valor composto pelo Bairro, Rua e Número. |
+| complemento  | VARCHAR |  50 bytes | null                           | Informacoes que agregam ao endereco.      |
 
 # Entidade cliente
 | Coluna          | Tipo     | Tamanho   | Complemento                | Descricao                               |
 |-----------------|----------|-----------|----------------------------|-----------------------------------------|
 | id\_cliente     | INTEGER  |   4 bytes | PK, auto\_increment        | Código de identificação do cliente.     |
 | nome            | VARCHAR  |  50 bytes | NOT null                   | Nome e sobrenome do cliente.            |
-| email           | VARCHAR  | 255 bytes | NOT null, UNIQUE           | E-mail utilizado para cadastro.         |
+| email           | VARCHAR  | 100 bytes | NOT null, UNIQUE           | E-mail utilizado para cadastro.         |
 | senha           | VARCHAR  | 100 bytes | NOT null                   | Senha de segurança para login.          |
 | status\_cliente | BOOLEAN  |   1 bytes | DEFAULT true               | Status ativação de cadastro do cliente. |
 | data\_inclusao  | DATETIME |   3 bytes | DEFAULT current\_timestamp | Data em que o cliente foi cadastrado.   |
@@ -141,15 +141,15 @@ erDiagram
 | id\_endereco | INTEGER | 4 bytes | PK, FK, NOT null | Código de identificação do endereco que contem. |
 
 # Entidade produto
-| Coluna          | Tipo     | Tamanho  | Complemento                | Descricao                             |
-|-----------------|----------|----------|----------------------------|---------------------------------------|
-| id\_produto     | INTEGER  |  4 bytes | PK, auto\_increment        | Código de identificação do produto.   |
-| descricao       | CHAR     | 50 bytes | NOT null                   | Descrição do produto em questão.      |
-| preco           | DECIMAL  |  5 bytes | NOT null                   | Preço do produto, ex. R$12.345,67     |
-| quantidade      | INTEGER  |  4 bytes | DEFAULT 1                  | Quantidade de produtos em estoque.    |
-| status\_produto | BOOLEAN  |  1 bytes | DEFAULT true               | Status de disponibilidade de produto. |
-| data\_inclusao  | DATETIME |  3 bytes | DEFAULT current\_timestamp | Data em que o produto foi incluído.   |
-| data\_alteracao | DATETIME |  3 bytes | null                       | Data em que o produto foi alterado.   |
+| Coluna          | Tipo     | Tamanho   | Complemento                | Descricao                             |
+|-----------------|----------|-----------|----------------------------|---------------------------------------|
+| id\_produto     | INTEGER  |   4 bytes | PK, auto\_increment        | Código de identificação do produto.   |
+| descricao       | CHAR     | 255 bytes | NOT null                   | Descrição do produto em questão.      |
+| valor           | DECIMAL  |   5 bytes | NOT null                   | Preço do produto, ex. R$12.345,67     |
+| estoque         | INTEGER  |   4 bytes | DEFAULT 1                  | Quantidade de produtos em estoque.    |
+| status\_produto | BOOLEAN  |   1 bytes | DEFAULT true               | Status de disponibilidade de produto. |
+| data\_inclusao  | DATETIME |   3 bytes | DEFAULT current\_timestamp | Data em que o produto foi incluído.   |
+| data\_alteracao | DATETIME |   3 bytes | null                       | Data em que o produto foi alterado.   |
 
 # Entidade pedido
 | Coluna       | Tipo    | Tamanho | Complemento                    | Descricao                            |
