@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS endereco (
 CREATE TABLE IF NOT EXISTS cliente (
     id_cliente      INTEGER auto_increment
   , nome            VARCHAR ( 50) NOT null
-  , email           VARCHAR (255) NOT null
+  , email           VARCHAR (100) NOT null
   , senha           VARCHAR (100) NOT null
   , status_cliente  BOOLEAN DEFAULT true
   , data_inclusao  DATETIME DEFAULT current_timestamp
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS pedido_produto (
     id_pedido  INTEGER NOT null
   , id_produto INTEGER NOT null
   , quantidade INTEGER DEFAULT 1
-  , somatorio  DECIMAL (10,2) NOT null
+  , somatorio  DECIMAL (8,2) NOT null
   ,    PRIMARY KEY (id_pedido, id_produto)
   , CONSTRAINT fk_id_pedido_pp
        FOREIGN KEY (id_pedido)
