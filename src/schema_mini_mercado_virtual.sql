@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS produto (
 CREATE TABLE IF NOT EXISTS pedido (
     id_pedido       INTEGER auto_increment
   , id_cliente      INTEGER NOT null
+  , id_endereco     INTEGER NOT null
   , status_pedido   BOOLEAN DEFAULT true
   , data_inclusao  DATETIME DEFAULT current_timestamp
   , data_alteracao DATETIME null
@@ -63,6 +64,10 @@ CREATE TABLE IF NOT EXISTS pedido (
   , CONSTRAINT fk_id_cliente_pedido
        FOREIGN KEY (id_cliente)
     REFERENCES cliente(id_cliente)
+            ON DELETE cascade
+  , CONSTRAINT fk_id_endereco_pedido
+       FOREIGN KEY (id_endereco)
+    REFERENCES endereco(id_endereco)
             ON DELETE cascade
 );
 

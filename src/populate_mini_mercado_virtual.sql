@@ -14,7 +14,7 @@ VALUES ("SP", "Sao Paulo", "01153000", "Barra Funda", "Vitorino Carmilo", 156);
   contido no campo email deve ser unico.
 */
 INSERT INTO cliente (nome, email, senha)
-VALUES ("Ramario Roberto de Lima", "orlando@hotmail.com", "Password213*")
+VALUES ("Romario Roberto de Lima", "orlando@hotmail.com", "Password213*")
      , ("Ronaldo Nazario da Silva", "ronaldo@hotmail.com", "GolPass09*");
 
 /*
@@ -38,13 +38,18 @@ VALUES ("Mouse sem fio Logitech Trackball ERGO M575S", 325.90, 20)
 ;
 
 /*
-  Nova instancia de pedido utilizando ID de instancia de cliente em atividade.
+  Nova instancia de pedido utilizando ID de instancia de cliente em atividade e
+  o endereco correto da tabela de juncao cliente e endereco.
 */
-INSERT INTO pedido (id_cliente)
-VALUES ((SELECT c.id_cliente
-          FROM cliente AS c
-         WHERE c.email = "ronaldo@hotmail.com"
-	   AND c.status_cliente = true));
+
+INSERT INTO pedido (id_cliente, id_endereco)
+SELECT c.id_cliente
+     , e.id_endereco
+  FROM cliente_endereco AS ce
+ INNER JOIN cliente AS c
+    ON c.id_cliente = ce.id_cliente
+ INNER JOIN endereco AS e
+    ON e.id_endereco = ce.id_endereco;
 
 /*
   Nova instancia da entidade pedido_produto, responsavel pela relacao entre a

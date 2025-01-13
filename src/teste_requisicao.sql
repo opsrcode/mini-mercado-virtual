@@ -3,10 +3,10 @@ USE mini_mercado_virtual;
   Requisicao das informacoes basicas do cliente que registrou pedido no
   sistema.
 */
-SELECT c.nome
-     , c.email
-     , DATE(p.data_inclusao)
-     , c.status_cliente
+SELECT c.nome                AS "Nome cliente"
+     , c.email               AS "E-mail"
+     , DATE(p.data_inclusao) AS "Data inclusao"
+     , c.status_cliente      AS "Status"
   FROM pedido AS p
  INNER JOIN cliente AS c
     ON c.id_cliente = p.id_cliente;
@@ -15,25 +15,26 @@ SELECT c.nome
   Descricao detalhada de uma instancia de cliente, com todos os dados de
   localizacao relevantes.
 */
-SELECT c.nome
-     , c.email
-     , c.senha
-     , e.uf
-     , e.cidade
-     , e.bairro
-     , e.logradouro
-     , e.numero
+SELECT c.nome       AS "Nome cliente"
+     , c.email      AS "E-mail"
+     , c.senha      AS "Senha"
+     , e.uf         AS "UF"
+     , e.cidade     AS "Cidade"
+     , e.bairro     AS "Bairro"
+     , e.logradouro AS "Logradouro"
+     , e.numero     AS "Numero"
   FROM cliente AS c
- INNER JOIN (cliente_endereco AS ce, endereco AS e)
+ INNER JOIN cliente_endereco AS ce
     ON ce.id_cliente = c.id_cliente
-   AND e.id_endereco = ce.id_endereco; 
+ INNER JOIN endereco AS e
+    ON e.id_endereco = ce.id_endereco; 
 
 /*
   Requisicao contendo descricao do produto em questao, basendo-se na premissa
   de que todos os produtos retornados estao abaixo de R$300.
 */
-SELECT p.descricao
-     , p.valor
+SELECT p.descricao AS "Descricao produto"
+     , p.valor     AS "Valor"
   FROM produto p
  WHERE p.valor < 500;
 
@@ -41,11 +42,11 @@ SELECT p.descricao
   Se ainda em andamento, o pedido sera retornado com as devidas informacoes
   solicitadas.
 */
-SELECT p.id_pedido
-     , c.nome
-     , c.email
-     , p.status_pedido
-     , p.data_inclusao
+SELECT p.id_pedido     AS "ID pedido"
+     , c.nome          AS "Nome cliente"
+     , c.email         AS "E-mail"
+     , p.status_pedido AS "Em andamento"
+     , p.data_inclusao AS "Data solicitacao"
   FROM pedido AS p
  INNER JOIN cliente AS c
     ON c.id_cliente = p.id_cliente
@@ -75,8 +76,8 @@ AND PR.id_produto=PP.id_produto AND E.id_endereco=C.id_endereco;
   INNER JOIN pedido AS p
      ON p.id_pedido = pp.id_pedido
   WHERE DATE(p.data_inclusao)
-BETWEEN "2025/01/11"
-    AND "2025/01/12";
+BETWEEN "2025/01/10"
+    AND current_date;
 
 /*
   Novamente, lista o extrado do dia determinado pela instrucao 'WHERE', mas
@@ -84,15 +85,16 @@ BETWEEN "2025/01/11"
   incluindo quantidade, valor de cada um e o somatorio final do valor obtido.
 */
  SELECT DATE(pe.data_inclusao)           AS "Data inclusao"
-      , pr.descricao                     AS "Descricao do produto"
+      , pr.descricao                     AS "Descricao produto"
       , CONCAT("R$ ", pr.valor)          AS "Valor unidade"
       , SUM(pp.quantidade)               AS "Unidades"
       , CONCAT("R$ ", SUM(pp.somatorio)) AS "Valor total"
    FROM pedido_produto AS pp
-  INNER JOIN (pedido AS pe, produto AS pr)
+  INNER JOIN pedido AS pe
      ON pe.id_pedido = pp.id_pedido
-    AND pr.id_produto = pp.id_produto
+  INNER JOIN produto AS pr
+     ON pr.id_produto = pp.id_produto
   WHERE DATE(pe.data_inclusao)
-BETWEEN "2025/01/11"
-    AND "2025/01/12"
+BETWEEN "2025/01/10"
+    AND current_date
   GROUP BY pp.id_produto;

@@ -48,8 +48,8 @@
 - produto: id\_produto (PK), descricao, preco, quantidade, status\_produto,
   data\_inclusao, data\_alteracao;
 
-- pedido: id\_pedido (PK), id\_cliente (FK), somatorio, status\_pedido,
-  data\_inclusao, data\_alteracao;
+- pedido: id\_pedido (PK), id\_cliente (FK), id\_endereco (FK), somatorio,
+  status\_pedido, data\_inclusao, data\_alteracao;
 
 - pedido\_produto: id\_pedido (PK,FK), id\_produto (PK,FK), quantidade,
   somatorio.
@@ -68,7 +68,6 @@ erDiagram
         INTEGER numero
         VARCHAR complemento
     }
-    cliente ||--|{ pedido : solicita
     cliente {
         INTEGER  id_cliente PK
         VARCHAR  nome
@@ -78,8 +77,8 @@ erDiagram
         DATETIME data_inclusao
         DATETIME data_alteracao
     }
-    cliente_endereco ||--|{ cliente  : mora
-    cliente_endereco ||--|{ endereco : constitui
+    cliente_endereco ||--|{ cliente  : elege
+    cliente_endereco ||--|{ endereco : compoe
     cliente_endereco {
         INTEGER id_cliente  PK,FK
         INTEGER id_endereco PK,FK
@@ -93,15 +92,17 @@ erDiagram
         DATETIME data_inclusao
         DATETIME data_alteracao
     }
+    pedido }|--|| cliente_endereco : recebe
     pedido {
-        INTEGER  id_pedido  PK
-        INTEGER  id_cliente FK
+        INTEGER  id_pedido   PK
+        INTEGER  id_cliente  FK
+        INTEGER  id_endereco FK
         BOOLEAN  status_pedido
         DATETIME data_inclusao
         DATETIME data_alteracao
     }
-    pedido_produto ||--|{ pedido  : constitui
-    pedido_produto ||--|{ produto : contem
+    pedido_produto ||--|{ pedido  : demanda
+    pedido_produto ||--|{ produto : constitui
     pedido_produto {
         INTEGER id_pedido  PK,FK
         INTEGER id_produto PK,FK
@@ -151,13 +152,14 @@ erDiagram
 | data\_alteracao | DATETIME |  3 bytes | null                       | Data em que o produto foi alterado.   |
 
 # Entidade pedido
-| Coluna       | Tipo    | Tamanho | Complemento                    | Descricao                           |
-|--------------|---------|---------|--------------------------------|-------------------------------------|
-| id\_pedido      | INTEGER  | 4 bytes | PK, auto\_increment        | Código de identificação do pedido.  |
-| id\_cliente     | INTEGER  | 4 bytes | FK, NOT null               | Código de identificação do cliente. |
-| status\_pedido  | BOOLEAN  | 1 bytes | DEFAULT true               | Status de andamento do pedido.      |
-| data\_inclusao  | DATETIME | 3 bytes | DEFAULT current\_timestamp | Data em que o pedido foi realizado. |
-| data\_alteracao | DATETIME | 3 bytes | null                       | Data em que o pedido foi alterado.  |
+| Coluna       | Tipo    | Tamanho | Complemento                    | Descricao                            |
+|--------------|---------|---------|--------------------------------|--------------------------------------|
+| id\_pedido      | INTEGER  | 4 bytes | PK, auto\_increment        | Código de identificação do pedido.   |
+| id\_cliente     | INTEGER  | 4 bytes | FK, NOT null               | Código de identificação do cliente.  |
+| id\_endereco    | INTEGER  | 4 bytes | FK, NOT null               | Código de identificação do endereco. |
+| status\_pedido  | BOOLEAN  | 1 bytes | DEFAULT true               | Status de andamento do pedido.       |
+| data\_inclusao  | DATETIME | 3 bytes | DEFAULT current\_timestamp | Data em que o pedido foi realizado.  |
+| data\_alteracao | DATETIME | 3 bytes | null                       | Data em que o pedido foi alterado.   |
 
 # Entidade pedido\_produto
 | Coluna      | Tipo    | Tamanho | Complemento      | Descricao                           |
@@ -188,8 +190,8 @@ script. The benefit to using a CTE is that you can resduce the duplication,
 make your code more readable, and increase your ability to perform QA checks on
 your results."
 
-"A common table expression, or CTE, is atemporary named result set created from
-a simple 'SELECT' statement that can be used in a subsequent 'SELECT'
+"A common table expression, or CTE, is a temporary named result set created
+from a simple 'SELECT' statement that can be used in a subsequent 'SELECT'
 statement. Each SQL CTE is like a named query, whose result is store in a
 virtual table (a CTE) to be referenced later in the main query. CTEs are
 particularly useful for breaking down complex queries into more manageable
@@ -197,7 +199,7 @@ parts."
 
 "The CTE starts with the 'WITH' keyword, after which you specify the name of
 your CTE, then the content of the query in parentheses. The mains query comes
-after the closing parenthesis and referst to the CTE."
+after the closing parenthesis and refers to the CTE."
 
 ## Aliasing
 
